@@ -1,0 +1,3 @@
+include mothmusicplayer3/config.cfg
+include mothmusicplayer3/playlist.m3u
+include mothmusicplayer3/icon.png
