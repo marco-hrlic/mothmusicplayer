@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=mothmusicplayer3
+Comment=hi
+Exec=/usr/bin/mothmusicplayer3
+
+Path=/usr/bin/mothmusicplayer3
+Terminal=false
+Type=Application
+Categories=Utility;Application;
