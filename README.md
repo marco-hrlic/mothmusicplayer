@@ -19,11 +19,11 @@ To run you will need Python3, GTK3 and Gstreamer as well as Gstreamer plugins,
 which you probably have installed anyway. You can simple run the application
 by cloning the project or downloading it and running the following terminal
 commands: 
-*cd path/to/mothmusicplayer/mothmusicplayer3
-*python __main__.py
+`cd path/to/mothmusicplayer/mothmusicplayer3
+python __main__.py`
 
 or you can navigate to the mothmusicplayer directory and do:
-*pip install mothmusicplayer3* so you can start the application by
-simply calling *mothmusicplayer3* from terminal.
+`pip install mothmusicplayer3` so you can start the application by
+simply calling `mothmusicplayer3` from terminal.
 
 *Marco Hrlic*
