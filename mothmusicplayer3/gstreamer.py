@@ -19,16 +19,13 @@ loop = GObject.MainLoop()
 class Player(threading.Thread):
     def exit_player(self):
 
-        #print "exit_gst"
         #stop the track
         self.player.set_state(Gst.State.NULL)
-        #quit the exxects engine
         #self.vol.exit_()
         #stop the gobject loop
         loop.quit()
-        #print "loop"
         exit(0)
-        #logging.debug("shutting down the player")
+        logging.debug("shutting down the player")
 
     def run(self):
         logging.debug("initalizing the player")
@@ -106,31 +103,20 @@ class Player(threading.Thread):
         self.track_queue.queue.clear()
 
     def about_to_finish(self, player):
-        print("about to finish")
+        logging.debug("about_to_finish")
+        if bool(configuration.get_conf("player", "repeat")):
+            self.load_track_from_playlist(self.playlist_instance.playlist, self.current_track_playlist_index)
+            return
         if not self.track_queue.empty():
-            self.current_track_playlist_index = self.track_queue.get()
-        self.music_items = self.playlist_instance.get_items_from_playlist(self.playlist_instance.playlist)
-        if not bool(configuration.get_conf("player", "repeat")):
+            self.current_track_playlist_index = self.track_queue.get() + 1
+        else:
             self.current_track_playlist_index += 1
         self.load_track_from_playlist(self.playlist_instance.playlist, self.current_track_playlist_index)
 
 
     def on_message(self, bus, message):
         t = message.type
-        #print "  <>debug: on_message"
         if t == Gst.MessageType.EOS:
-            #ovo se obraduje u about to finish..zbog brzeg prijenosa!!!!
-
-            #self.player.set_state(Gst.State.NULL)
-            #self.is_playing = False
-
-            #look in the configuration file for the repeat setting
-            #if bool(configuration.get_conf("player", "repeat")):
-            #       self.player.set_state(Gst.State.PLAYING)
-            #       self.is_playing = True
-            #       self.gui.playlist__.playlist_selection_change(self.current_track_playlist_index - 1)
-            #else:
-            #self.start_next_track_from_playlist()
             pass
         elif t == Gst.MessageType.ERROR:
             self.player.set_state(Gst.State.NULL)
@@ -140,17 +126,13 @@ class Player(threading.Thread):
 
     def load_track_from_playlist(self, playlist_path, index_):
         logging.debug("loading track from playlist")
-        #get the items from the playlist
-        #promijenjo!!!
         self.music_items = self.playlist_instance.get_items_from_playlist(playlist_path)
 
         if index_ >= 0:
             if index_ <= len(self.music_items):
-                #print index_
                 self.item_to_play = self.music_items[index_ - 1]
                 self.current_track_playlist_index = index_
             else:
-                #print "  <ERROR: could not load track from playlist"
                 if bool(configuration.get_conf("player", "repeat_all")):
                     self.item_to_play = self.music_items[0]
                     self.current_track_playlist_index = 1
@@ -171,7 +153,7 @@ class Player(threading.Thread):
         logging.debug("set the player uri to the filepath")
 
     def load_track(self, input_path):
-        #print input_path
+        logging.debug("load_track")
         if os.path.isfile(input_path):
             self.filepath = "file://" + input_path
             self._filepath = input_path
@@ -187,6 +169,7 @@ class Player(threading.Thread):
         self.player.set_state(Gst.State.PLAYING)
         self.is_playing = True
         self.new_file = False
+        self.gui.player_controls__.start_stop_bar_animation()
 
     def start_next_track_from_playlist(self, data=None):
         logging.debug("load and start next track from playlist if possible")
@@ -241,6 +224,7 @@ class Player(threading.Thread):
         self.player.set_state(Gst.State.PAUSED)
         self.is_playing = False
         self.is_paused = True
+        self.gui.player_controls__.start_stop_bar_animation()
 
     def volume_track_up(self, data=None):
         value = self.volume_show_track()

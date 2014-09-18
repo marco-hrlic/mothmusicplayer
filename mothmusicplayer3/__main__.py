@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 from mothmusicplayer3 import gstreamer
 from mothmusicplayer3 import volumeFade
@@ -9,7 +9,8 @@ from mothmusicplayer3 import globalkeys
 
 class mothmusicplayer:
     def __init__(self):
-        volume = volumeFade.volume_fader()
+        #volume = volumeFade.volume_fader()
+        volume = None
         playlist_ = playlist.playlist_parser()
         gst = gstreamer.Player(playlist_, volume)
         #cmd = cmdDebug.cmdDbg(gst, playlist)
@@ -26,7 +27,7 @@ class mothmusicplayer:
         gst.get_gui(gui)
 
         #start threads
-        volume.start()
+        #volume.start()
         #cmd.start()
         gst.start()
         gui.main()

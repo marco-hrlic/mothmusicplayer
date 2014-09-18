@@ -76,12 +76,9 @@ class seek_bar_:
 
 
     def set_seeking(self, widget, data=None):
-        # TRYING THINGS MIGHT BREAK STUFF!!!!!!
-        print("set_seeking------------------------")
         if self.player.is_playing or self.player.is_paused:
             self.is_seeking = True
             adjustment = Gtk.Adjustment(self.percent, 0.00, 100.0, 0.5, 0.5, 1.0)
-            print("handler")
             self.hscale.set_adjustment(adjustment)
             self.handler_id = self.hscale.connect("change-value", self.seeking_value)
 

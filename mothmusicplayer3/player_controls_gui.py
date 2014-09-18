@@ -3,7 +3,7 @@
 import gi
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, GObject, GdkPixbuf
 from mothmusicplayer3 import configuration
 from mothmusicplayer3 import seekbar_gui
 from mothmusicplayer3 import settings_gui
@@ -44,14 +44,26 @@ class player_controls_:
         image_next = Gtk.Image()
         image_repeat = Gtk.Image()
         image_pref = Gtk.Image()
+        self.image_bars = Gtk.Image()
 
         #set images
-        image_play.set_from_stock(Gtk.STOCK_MEDIA_PLAY, Gtk.IconSize.BUTTON)
-        image_pause.set_from_stock(Gtk.STOCK_MEDIA_PAUSE, Gtk.IconSize.BUTTON)
-        image_prev.set_from_stock(Gtk.STOCK_MEDIA_PREVIOUS, Gtk.IconSize.BUTTON)
-        image_next.set_from_stock(Gtk.STOCK_MEDIA_NEXT, Gtk.IconSize.BUTTON)
-        image_repeat.set_from_stock(Gtk.STOCK_REFRESH, Gtk.IconSize.BUTTON)
-        image_pref.set_from_stock(Gtk.STOCK_PREFERENCES, Gtk.IconSize.BUTTON)
+        if(bool(configuration.get_conf("apperance", "use_system_gtk_theme"))):
+            image_play.set_from_stock(Gtk.STOCK_MEDIA_PLAY, Gtk.IconSize.BUTTON)
+            image_pause.set_from_stock(Gtk.STOCK_MEDIA_PAUSE, Gtk.IconSize.BUTTON)
+            image_prev.set_from_stock(Gtk.STOCK_MEDIA_PREVIOUS, Gtk.IconSize.BUTTON)
+            image_next.set_from_stock(Gtk.STOCK_MEDIA_NEXT, Gtk.IconSize.BUTTON)
+            image_repeat.set_from_stock(Gtk.STOCK_REFRESH, Gtk.IconSize.BUTTON)
+            image_pref.set_from_stock(Gtk.STOCK_PREFERENCES, Gtk.IconSize.BUTTON)
+        else:
+            image_play.set_from_file("mmp_icons/media-playback-start.svg")
+            image_pause.set_from_file("mmp_icons/media-playback-pause.svg")
+            image_prev.set_from_file("mmp_icons/media-skip-backward.svg")
+            image_next.set_from_file("mmp_icons/media-skip-forward.svg")
+            image_repeat.set_from_file("mmp_icons/view-refresh.svg")
+            image_pref.set_from_stock(Gtk.STOCK_PREFERENCES, Gtk.IconSize.BUTTON)
+
+        self.bar_animation = GdkPixbuf.PixbufAnimation.new_from_file("mmp_icons/bar1.gif") 
+        self.image_bars.set_from_pixbuf(self.bar_animation.get_static_image())
 
         #declare buttons
         self.play_button = Gtk.Button()
@@ -105,6 +117,7 @@ class player_controls_:
         box.pack_start(spacer1, False, True, 10)
         box.pack_start(self.repeat_button, False, True, 0)
         box.pack_start(spacer2, False, True, 10)
+        box.pack_start(self.image_bars, False, True, 0)
         box.pack_start(self.seek_bar_, True, True, 0)
         box.pack_start(self.volume_button, False, True, 0)
         box.pack_start(self.pref_button, False, False, 10)
@@ -119,9 +132,15 @@ class player_controls_:
         self.repeat_button.show()
         self.pref_button.show()
         self.volume_button.show()
-
+        self.image_bars.show()
         box.show()
         return box
+
+    def start_stop_bar_animation(self):
+        if(self.player.is_playing):
+            self.image_bars.set_from_animation(self.bar_animation)
+        else:
+            self.image_bars.set_from_pixbuf(self.bar_animation.get_static_image())
 
     def connect_handlers(self):
         self.play_button.connect("pressed", self.play_button_pressed)
@@ -141,7 +160,6 @@ class player_controls_:
 
     def play_button_pressed(self, data=None):
         logging.debug("play action has occured(button or invoked from code)")
-
         if not self.player.is_playing and not self.player.is_paused:
             selection = self.parent.playlist__.treeView.get_selection()
             rows = selection.get_selected_rows()[1]
@@ -160,5 +178,5 @@ class player_controls_:
             path = self.parent.playlist__.store.get_path(treeiter)
             value = path[0]
             if not self.player.current_track_playlist_index == (value + 1):
-                self.parent.playlist__.row_activated(self.parent.playlist__.treeView, path, None,
-                                                     self.parent.playlist__.store)
+                self.parent.playlist__.row_activated(self.parent.playlist__.treeView, path, None, self.parent.playlist__.store)
+

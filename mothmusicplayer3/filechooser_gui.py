@@ -19,6 +19,8 @@ class filechooser:
         self.sel_array = [[''], ['']]
         self.count = 0
 
+        self.text_color = "#808080"
+
         self.file_filter = Gtk.FileFilter()
         self.file_filter.set_name("Audio")
         self.file_filter.add_mime_type("audio/mpeg")
@@ -54,7 +56,7 @@ class filechooser:
                     if n < 0:
                         n = 0
                     self.store.append([n, self.media_.track_get_title(item), self.media_.track_get_artist(item),
-                                       self.media_.track_get_album(item), "#000000", item, ""])
+                                       self.media_.track_get_album(item), self.text_color, item, ""])
                     self.playlist_class_.index_update()
                     self.playlist.put_item_into_playlist(self.playlist.internal_playlist, item)
                 if os.path.isdir(item):
@@ -71,7 +73,7 @@ class filechooser:
                                 n = 0
                             self.store.append(
                                 [n, self.media_.track_get_title(item_), self.media_.track_get_artist(item_),
-                                 self.media_.track_get_album(item_), "#000000", item, ""])
+                                 self.media_.track_get_album(item_), self.text_color, item, ""])
                             self.playlist_class_.index_update()
                             self.playlist.put_item_into_playlist(self.playlist.internal_playlist, item_)
 
@@ -89,11 +91,12 @@ class filechooser:
         self.count = (self.count + 1) % 2
 
     def current_folder_changed(self, file):
-        current_folder_uri = file.get_current_folder_uri()
-        model.prepend()
-        iter = model.get_iter_root()
-        model.set(iter,"SAADAd")
-        print("blalbal")
+        #current_folder_uri = file.get_current_folder_uri()
+        #model.prepend()
+        #iter = model.get_iter_root()
+        #model.set(iter,"SAADAd")
+        #print("blalbal")
+        pass
 
     def file_chooser_box2(self):
         box = Gtk.HBox(False, 0)
@@ -122,7 +125,8 @@ class filechooser:
         file_.connect("key-press-event", self.on_key_press_event, 0)
         file_.connect("file-activated", self.on_key_press_event, None, 1)
         file_.connect("current-folder-changed", self.current_folder_changed)
-
+        
+        self.file_tree = file_tree
         self.file_ = file_
         self.file_chooser_places_show_hide()
 

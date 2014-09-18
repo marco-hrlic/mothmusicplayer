@@ -74,7 +74,7 @@ class playlist_builder:
                 for x, item, in enumerate(items)]
         store = Gtk.ListStore(int, str, str, str, str, str, str)
         for item in data:
-            store.append([item[0], item[1], item[2], item[3], "#000000", item[4], ""])
+            store.append([item[0], item[1], item[2], item[3], "#808080", item[4], ""])
             # 0-index,1-title,2-artist,3-album,4-color,5-path,6-icon
         return store
 
@@ -119,7 +119,7 @@ class playlist_builder:
                 self.store[index][6] = ""
 
     def color_update(self, index):
-        self.store[self.prev_index][4] = "#000000"
+        self.store[self.prev_index][4] = "#808080"
         self.store[self.prev_index][6] = ""
         self.store[index][4] = "#2A62C9"
         self.store[index][6] = Gtk.STOCK_MEDIA_PLAY

@@ -17,7 +17,7 @@ class main_window:
     media_ = mediaInfo2.mediaTag()
 
     def file_path(self):
-        return os.path.split(os.path.abspath(__file__))[0] + '/icon.png'
+        return 'mmp_icons/icon.png'
 
 
     def __init__(self, player, playlist):
@@ -44,16 +44,31 @@ class main_window:
         self.player_controls.settings.destroy()
         Gtk.main_quit()
 
+    def theme_setup(self):
+        if(not bool(configuration.get_conf("apperance","use_system_gtk_theme"))): 
+            screen = Gdk.Screen.get_default()
+
+            style_provider = Gtk.CssProvider()
+            style_provider.load_from_path("style.css")
+
+            context = Gtk.StyleContext()
+            context.add_provider_for_screen(screen, style_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+
+
+
     def default_layout(self):
 
         # main_window
         self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.window.set_title("Moth Music Player")
+        self.window.set_name("main")
         self.window.set_default_size(1024, 512)
         self.window.set_icon_from_file(self.file_path())
 
         self.window.connect("destroy", self.destroy)
         self.window.connect("key_press_event", self.key_press)
+        
+        self.theme_setup()
 
         self.box1 = Gtk.VBox(False, 0)
         self.box2 = Gtk.HPaned()
@@ -105,6 +120,7 @@ class main_window:
 
     def key_press(self, widget, data=None):
         keyname = Gdk.keyval_name(data.keyval)
+        print(keyname)
         if keyname == "colon":
             self.console.show_hide(True)
             self.console.textbox.grab_focus()

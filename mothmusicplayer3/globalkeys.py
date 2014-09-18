@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
 import logging
-
+import gi
 from keybinder.keybinder_gtk import KeybinderGtk
-
 from mothmusicplayer3 import configuration
 
 
@@ -15,7 +14,6 @@ class keybind:
         self.player = player
         self.gui = gui
         self.get_keybindings()
-        self.binder = KeybinderGtk()
 
     def get_keybindings(self):
         logging.debug("getting the keybindings from config file")
@@ -29,46 +27,30 @@ class keybind:
 
     def bind_keys(self):
         logging.debug("binding the keys to the related functions")
-        # call_play =lambda *args: self.gui.player_controls__.play_button_pressed()
-        call_play = lambda *args: print("hahahhaha")
+        """self.binder = KeybinderGtk()
+        call_play = lambda *args: self.gui.player_controls__.play_button_pressed()
         call_pause = lambda *args: self.player.pause_track()
         call_next = lambda *args: self.player.start_next_track_from_playlist()
         call_prev = lambda *args: self.player.start_previous_track_from_playlist()
         call_volup = lambda *args: self.player.volume_track_up()
         call_voldown = lambda *args: self.player.volume_track_down()
-        try:
-            # play
-            self.binder.register(self.play_keystr, call_play)
-        except:
-            logging.debug("binding failed")
 
-        try:
-            # pause
-            self.binder.register(self.pause_keystr, call_pause)
-        except:
-            logging.debug("binding failed")
+        # play
+    
+        self.binder.register(self.play_keystr,call_play)
 
-        try:
-            # next
-            self.binder.register(self.next_keystr, call_next)
-        except:
-            logging.debug("binding failed")
+        # pause
+        self.binder.register(self.pause_keystr, call_pause)
 
-        try:
-            # prev
-            self.binder.register(self.prev_keystr, call_prev)
-        except:
-            logging.debug("binding failed")
+        # next
+        self.binder.register(self.next_keystr, call_next)
 
-        try:
-            # vol-up
-            self.binder.register(self.volup_upkeystr, call_volup)
-        except:
-            logging.debug("binding failed")
+        # prev
+        self.binder.register(self.prev_keystr, call_prev)
 
-        try:
-            # vol-down
-            self.binder.register(self.voldown_keystr, call_voldown)
-        except:
-            logging.debug("binding failed")
-        self.binder.start()
+        # vol-up
+        self.binder.register(self.volup_upkeystr, call_volup)
+
+        # vol-down
+        self.binder.register(self.voldown_keystr, call_voldown)
+        self.binder.start()"""

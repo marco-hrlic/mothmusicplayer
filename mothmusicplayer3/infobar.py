@@ -24,9 +24,7 @@ class infobar:
         self.infotext_artist = data[2]
         self.infotext_title = data[1]
         self.infotext_album = data[3]
-        # self.label.set_text("..::    "+ self.infotext_title + "  -  " + self.infotext_artist + "  -  " + self.infotext_album + "    ::..")
-        self.label.set_markup(
-            "<span weight = \"light\"> " + "..::    " + self.infotext_title + "  -  " + self.infotext_artist + "  -  " + self.infotext_album + "    ::.." + "</span>")
+        self.label.set_text(self.infotext_title + "  -  " + self.infotext_artist + "  -  " + self.infotext_album)
 
     def show_hide(self):
         state = configuration.get_conf("player", "show_infobar", "bool")
